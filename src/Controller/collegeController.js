@@ -52,6 +52,12 @@ const createColleges = async function (req, res) {
     res.status(400).send({ status: false, message: 'Please provide valid URL'})
     return;
   }
+    if (isDeleted == true) {
+      res
+        .status(400)
+        .send({ status: false, msg: "Cannot input isDeleted as true while registering" });
+      return;
+    }
     //Validation Ends
     const isNameAlreadyUsed = await collegeModel.findOne({ name });
     if (isNameAlreadyUsed) {
