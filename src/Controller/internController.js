@@ -25,7 +25,7 @@ const createInterns = async function (req, res) {
         });
       }
     //Extract Params
-    const { name, email, mobile, collegeId, isDeleted } = requestBody;
+    const { name, email, mobile, collegeName, isDeleted } = requestBody;
 
     //Validation Starts
     if (!isValid(name)) {
@@ -85,26 +85,21 @@ const createInterns = async function (req, res) {
           .status(400)
           .send({ status: false, message: "Cannot input isDeleted as true while registering" });
       }
-    if (!isValid(collegeId)) {
-      res.status(400).send({ status: false, msg: "College ID is required" });
-      return;
+      if(!isValid(collegeName)){
+        return res.status(400).send({status:false, message: " College Name is require"});
     }
-    if (!isValidObjectId(collegeId)) {
-      res.status(400).send({ status: false, msg: "College ID is not valid" });
-      return;
-    }
-    
+   
 
-    //Validation ends
-    //Validating College ID
-    const isValidCollegeId = await collegeModel.findById({ _id: collegeId });
-
-    if (!isValidCollegeId) {
-      res
-        .status(400)
-        .send({ status: false, msg: `It is not a valid College ID` });
-      return;
+      let iscollegeId  = await collegeModel.findOne({name:requestBody.collegeName}).select({_id:1})
+      if(! iscollegeId){
+        return res.status(400).send({status:false, message: "college name not exist"})
     }
+
+      let id=iscollegeId._id.toString()
+     requestBody.collegeId=id
+     delete requestBody.collegeName
+     // console.log(intern)
+
     const newIntern = await internModel.create(requestBody);
     res.status(201).send({
       status: true,
