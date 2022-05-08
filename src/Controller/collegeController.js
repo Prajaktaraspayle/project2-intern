@@ -92,17 +92,17 @@ const createColleges = async function (req, res) {
   }
 };
 
-const colleageDetails = async function (req, res) {
+const collegeDetails = async function (req, res) {
   try {
-    const colleagName = req.query.name
+    const collegeName = req.query.name
 
-    if (!colleagName) {
+    if (!collegeName) {
       return res.status(404).send({ status: false, msg: "valid query is mandatory" })
     }
 
-    const college = await collegeModel.findOne({ name: colleagName });
+    const college = await collegeModel.findOne({ name: collegeName });
     if (!college) {
-      return res.status(404).send({ status: false, msg: "no such colleage present" })
+      return res.status(404).send({ status: false, msg: "no such college present" })
     }
     const interData = await internModel.find({ collegeId: college._id });
     if (!interData) {
@@ -121,7 +121,7 @@ const colleageDetails = async function (req, res) {
 
 
     const data = {
-      name: college.name,
+      collegename: college.name,
       fullName: college.fullName,
       logoLink: college.logoLink,
       interns: interns
@@ -141,4 +141,4 @@ const colleageDetails = async function (req, res) {
 
 
 module.exports.createColleges = createColleges
-module.exports.colleageDetails = colleageDetails
+module.exports.colleageDetails = collegeDetails
